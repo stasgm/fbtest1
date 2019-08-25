@@ -1,14 +1,15 @@
-import {MessageMetadata, Statement as NativeStatement} from "node-firebird-native-api";
-import {CursorType} from "../AResultSet";
-import {AStatement, IParams} from "../AStatement";
-import {CommonParamsAnalyzer} from "../common/CommonParamsAnalyzer";
+import { MessageMetadata, Statement as NativeStatement } from "node-firebird-native-api";
+import { CursorType } from "../AResultSet";
+import { AStatement, IParams } from "../AStatement";
+import { CommonParamsAnalyzer } from "../common/CommonParamsAnalyzer";
 import { InputMetadata } from "./InputMetadata";
-import {Result} from "./Result";
-import {ResultSet} from "./ResultSet";
-import {Transaction} from "./Transaction";
-import {createDescriptors, dataWrite, fixMetadata, IDescriptor} from "./utils/fb-utils";
+import { Result } from "./Result";
+import { ResultSet } from "./ResultSet";
+import { Transaction } from "./Transaction";
+import { createDescriptors, dataWrite, fixMetadata, IDescriptor } from "./utils/fb-utils";
 
 export interface IStatementSource {
+    metadata: InputMetadata;
     handler: NativeStatement;
     inMetadata: MessageMetadata;
     outMetadata: MessageMetadata;
@@ -31,8 +32,8 @@ export class Statement extends AStatement {
     private readonly _paramsAnalyzer: CommonParamsAnalyzer;
 
     protected constructor(transaction: Transaction,
-                          paramsAnalyzer: CommonParamsAnalyzer,
-                          source?: IStatementSource) {
+        paramsAnalyzer: CommonParamsAnalyzer,
+        source?: IStatementSource) {
         super(transaction, paramsAnalyzer.sql);
         this._paramsAnalyzer = paramsAnalyzer;
         this.source = source;
@@ -44,24 +45,32 @@ export class Statement extends AStatement {
         return super.transaction as Transaction;
     }
 
-     get metadata(): InputMetadata {
-         return {} as InputMetadata;
+    get metadata(): InputMetadata {
+        return this.source!.metadata;
     }
 
-     public static async prepare(transaction: Transaction,
-                                sql: string): Promise<Statement> {
+    public static async prepare(transaction: Transaction,
+        sql: string): Promise<Statement> {
         const paramsAnalyzer = new CommonParamsAnalyzer(sql, Statement.EXCLUDE_PATTERNS,
             Statement.PLACEHOLDER_PATTERN);
         const source: IStatementSource = await transaction.connection.client.statusAction(async (status) => {
             const handler = await transaction.connection.handler!.prepareAsync(status, transaction.handler,
                 0, paramsAnalyzer.sql, 3, NativeStatement.PREPARE_PREFETCH_ALL);
 
+            const rawInDescriptors = createDescriptors(status, await handler!.getInputMetadataAsync(status));
+
             const inMetadata = fixMetadata(status, await handler!.getInputMetadataAsync(status))!;
             const outMetadata = fixMetadata(status, await handler!.getOutputMetadataAsync(status))!;
             const inDescriptors = createDescriptors(status, inMetadata);
             const outDescriptors = createDescriptors(status, outMetadata);
 
+            const metadata = await InputMetadata.getMetadata({
+                descriptors: rawInDescriptors,
+                fixedDescriptors: inDescriptors
+            });
+
             return {
+                metadata: metadata as InputMetadata,
                 handler: handler!,
                 inMetadata,
                 outMetadata,
@@ -95,7 +104,7 @@ export class Statement extends AStatement {
 
     protected async _execute(params?: IParams): Promise<void> {
         await this.transaction.connection.client.statusAction(async (status) => {
-            const {inMetadata, outMetadata, inDescriptors}: IStatementSource = this.source!;
+            const { inMetadata, outMetadata, inDescriptors }: IStatementSource = this.source!;
             const inBuffer = new Uint8Array(inMetadata.getMessageLengthSync(status));
             const outBuffer = new Uint8Array(outMetadata.getMessageLengthSync(status));
 

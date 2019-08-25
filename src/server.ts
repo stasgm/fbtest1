@@ -22,10 +22,10 @@ const connect = async () => {
       const con = await connectionPool.get();
       const transaction: ATransaction = await con.startTransaction();
       try {
-        const sqlParams = await con.prepare(transaction, `select name from gd_contact where name > '' and id = :id`);
+        const sqlParams = await con.prepare(transaction, `select name from gd_contact where name > '' and id = :id and name = :name and contacttype = :ct`);
         console.log(sqlParams);
 
-        const resultSet = await con.executeQuery(
+/*         const resultSet = await con.executeQuery(
           transaction,
           `select name from gd_contact where name > ''`
         );
@@ -34,7 +34,7 @@ const connect = async () => {
           contacts.push(resultSet.getString('NAME'));
         }
         console.log('saved!');
-        await resultSet.close();
+        await resultSet.close(); */
       } catch (e) {
         console.log(e);
       }
@@ -46,7 +46,7 @@ const connect = async () => {
 
 app.get('/', async (req, res) => {
   try {
-    const connection = await connect();
+    await connect();
   } catch (err) {
     console.log(err);
   } finally {

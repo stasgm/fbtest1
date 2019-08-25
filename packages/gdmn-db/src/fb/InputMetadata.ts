@@ -1,7 +1,7 @@
-import {AMetadata, Types} from "../AMetadata";
-import {Statement} from "./Statement";
-import {SQLTypes} from "./utils/constants";
-import {createDescriptors, IDescriptor} from "./utils/fb-utils";
+import { AMetadata, Types } from "../AMetadata";
+import { Statement } from "./Statement";
+import { SQLTypes } from "./utils/constants";
+import { createDescriptors, IDescriptor } from "./utils/fb-utils";
 
 export interface IResultSetMetadataSource {
     descriptors: IDescriptor[];
@@ -25,22 +25,8 @@ export class InputMetadata extends AMetadata {
         return this._source!.descriptors.length;
     }
 
-    public static async getMetadata(statement: Statement): Promise<InputMetadata> {
-        const result: IResultSetMetadataSource = await statement.transaction.connection.client
-            .statusAction(async (status) => {
-                const metadata = await statement.source!.handler.getInputMetadataAsync(status);
-                try {
-                    const descriptors = createDescriptors(status, metadata!);
-
-                    return {
-                        descriptors,
-                        fixedDescriptors: statement.source!.outDescriptors
-                    };
-                } finally {
-                    await metadata!.releaseAsync();
-                }
-            });
-        return new InputMetadata(result);
+    public static async getMetadata(descriptiors: IResultSetMetadataSource): Promise<InputMetadata> {
+        return new InputMetadata(descriptiors);
     }
 
     protected _getColumnLabel(i: number): string | undefined {
