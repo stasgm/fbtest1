@@ -17,6 +17,7 @@ export interface IStatementSource {
     outDescriptors: IDescriptor[];
 }
 
+const DIALECT_NUMBER = 3;
 export class Statement extends AStatement {
 
     public static EXCLUDE_PATTERNS = [
@@ -49,18 +50,38 @@ export class Statement extends AStatement {
         return this.source!.metadata;
     }
 
+   get plan(): string {
+        if (!this.source!.handler) { return ""; }
+        try {
+            this.transaction.connection.client.statusActionSync(async (status) => {
+                try {
+                    const plan = await this.source!.handler.getPlanAsync(status, true);
+                    return plan;
+                }
+                catch (e) {
+                    console.log(e);
+                }
+            });
+        } catch (error) {
+            return "";
+        }
+        return "";
+    }
+
     public static async prepare(transaction: Transaction,
         sql: string): Promise<Statement> {
         const paramsAnalyzer = new CommonParamsAnalyzer(sql, Statement.EXCLUDE_PATTERNS,
             Statement.PLACEHOLDER_PATTERN);
         const source: IStatementSource = await transaction.connection.client.statusAction(async (status) => {
             const handler = await transaction.connection.handler!.prepareAsync(status, transaction.handler,
-                0, paramsAnalyzer.sql, 3, NativeStatement.PREPARE_PREFETCH_ALL);
+                0, paramsAnalyzer.sql, DIALECT_NUMBER, NativeStatement.PREPARE_PREFETCH_ALL);
 
-            const rawInDescriptors = createDescriptors(status, await handler!.getInputMetadataAsync(status));
+            const rawInMetadata = await handler!.getInputMetadataAsync(status);
+            const rawInDescriptors = createDescriptors(status, rawInMetadata);
 
             const inMetadata = fixMetadata(status, await handler!.getInputMetadataAsync(status))!;
             const outMetadata = fixMetadata(status, await handler!.getOutputMetadataAsync(status))!;
+
             const inDescriptors = createDescriptors(status, inMetadata);
             const outDescriptors = createDescriptors(status, outMetadata);
 

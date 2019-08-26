@@ -23,12 +23,15 @@ const connect = async () => {
       const transaction: ATransaction = await con.startTransaction();
       try {
         const sqlParams = await con.prepare(transaction, `select name from gd_contact where name > '' and id = :id and name = :name and contacttype = :ct`);
-        console.log(sqlParams);
 
-/*         const resultSet = await con.executeQuery(
+        console.log(sqlParams.plan);
+
+         const resultSet = await con.executeQuery(
           transaction,
           `select name from gd_contact where name > ''`
         );
+        console.log(resultSet.metadata);
+/*
         contacts.splice(0, contacts.length);
         while (await resultSet.next()) {
           contacts.push(resultSet.getString('NAME'));
@@ -51,7 +54,7 @@ app.get('/', async (req, res) => {
     console.log(err);
   } finally {
     let result = '<h1>Hello World!</h1>';
-    result += contacts.reduce((itm, acc) => (acc += `<div>${itm}</div>`)).split(' ');
+    // result += contacts.reduce((itm, acc) => (acc += `<div>${itm}</div>`)).split(' ');
     res.send(result);
   }
 });

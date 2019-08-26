@@ -37,6 +37,8 @@ export abstract class AStatement {
 
     abstract get metadata(): AMetadata;
 
+    abstract get plan(): string;
+
     get transaction(): ATransaction {
         return this._transaction;
     }

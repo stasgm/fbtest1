@@ -1,7 +1,6 @@
 import { AMetadata, Types } from "../AMetadata";
-import { Statement } from "./Statement";
 import { SQLTypes } from "./utils/constants";
-import { createDescriptors, IDescriptor } from "./utils/fb-utils";
+import { IDescriptor } from "./utils/fb-utils";
 
 export interface IResultSetMetadataSource {
     descriptors: IDescriptor[];
