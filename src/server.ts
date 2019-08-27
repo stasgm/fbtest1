@@ -24,7 +24,8 @@ const connect = async () => {
       try {
         const sqlParams = await con.prepare(transaction, `select name from gd_contact where name > '' and id = :id and name = :name and contacttype = :ct`);
 
-        console.log(sqlParams.plan);
+        const plan = await sqlParams.getPlan();
+        console.log(plan);
 
          const resultSet = await con.executeQuery(
           transaction,

@@ -19,7 +19,6 @@ export interface IStatementSource {
 
 const DIALECT_NUMBER = 3;
 export class Statement extends AStatement {
-
     public static EXCLUDE_PATTERNS = [
         /-{2}.*/g,                      // in-line comments
         /\/\*[\s\S]*?\*\//g,            // block comments
@@ -48,24 +47,6 @@ export class Statement extends AStatement {
 
     get metadata(): InputMetadata {
         return this.source!.metadata;
-    }
-
-    public static async getPlan(): Promise<string> {
-        /* if (!this.source!.handler) { return ""; }
-        try {
-            this.transaction.connection.client.statusActionSync(async (status) => {
-                try {
-                    const plan = await this.source!.handler.getPlanAsync(status, true);
-                    return plan;
-                }
-                catch (e) {
-                    console.log(e);
-                }
-            });
-        } catch (error) {
-            return "";
-        } */
-        return "";
     }
 
     public static async prepare(transaction: Transaction,
@@ -100,6 +81,24 @@ export class Statement extends AStatement {
             };
         });
         return new Statement(transaction, paramsAnalyzer, source);
+    }
+
+    public async getPlan(): Promise<string> {
+        if (!this.source) { return ""; }
+        if (!this.source.handler) { return ""; }
+        try {
+            await this.transaction.connection.client.statusAction(async (status) => {
+                try {
+                    return this.source!.handler.getPlanSync(status, true);
+                }
+                catch (e) {
+                    return "";
+                }
+            });
+        } catch (error) {
+            return "";
+        }
+        return "";
     }
 
     protected async _dispose(): Promise<void> {
