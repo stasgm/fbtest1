@@ -37,8 +37,6 @@ export abstract class AStatement {
 
     abstract get metadata(): AMetadata;
 
-    abstract get plan(): string;
-
     get transaction(): ATransaction {
         return this._transaction;
     }
@@ -150,6 +148,8 @@ export abstract class AStatement {
             this._lock.release();
         }
     }
+
+    public abstract async getPlan(): Promise<string>;
 
     protected async _executeWithLock<R>(callback: TExecutor<void, R>): Promise<R> {
         await this._lock.acquire();

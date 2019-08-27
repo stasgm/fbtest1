@@ -50,8 +50,8 @@ export class Statement extends AStatement {
         return this.source!.metadata;
     }
 
-   get plan(): string {
-        if (!this.source!.handler) { return ""; }
+    public static async getPlan(): Promise<string> {
+        /* if (!this.source!.handler) { return ""; }
         try {
             this.transaction.connection.client.statusActionSync(async (status) => {
                 try {
@@ -64,7 +64,7 @@ export class Statement extends AStatement {
             });
         } catch (error) {
             return "";
-        }
+        } */
         return "";
     }
 
