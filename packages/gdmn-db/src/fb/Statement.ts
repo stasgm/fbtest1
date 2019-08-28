@@ -84,19 +84,9 @@ export class Statement extends AStatement {
     }
 
     public async getPlan(): Promise<string> {
-        try {
-            await this.transaction.connection.client.statusAction(async (status) => {
-                try {
-                    return await this.source!.handler.getPlanAsync(status, true);
-                }
-                catch (e) {
-                    return "";
-                }
-            });
-        } catch (error) {
-            return "";
-        }
-        return "";
+        return await this.transaction.connection.client.statusAction(async (status) => {
+            return this.source!.handler.getPlanSync(status, false) || "";
+        });
     }
 
     protected async _dispose(): Promise<void> {
