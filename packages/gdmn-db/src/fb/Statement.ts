@@ -84,12 +84,10 @@ export class Statement extends AStatement {
     }
 
     public async getPlan(): Promise<string> {
-        if (!this.source) { return ""; }
-        if (!this.source.handler) { return ""; }
         try {
             await this.transaction.connection.client.statusAction(async (status) => {
                 try {
-                    return this.source!.handler.getPlanSync(status, true);
+                    return await this.source!.handler.getPlanAsync(status, true);
                 }
                 catch (e) {
                     return "";

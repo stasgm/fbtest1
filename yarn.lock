@@ -905,7 +905,7 @@ gauge@~2.7.3:
 "gdmn-db@file:packages/gdmn-db":
   version "1.0.0"
   dependencies:
-    gdmn-internals "file:C:/Users/Стас/AppData/Local/Yarn/Cache/v4/npm-gdmn-db-1.0.0-5cabf655-56c1-46d2-81af-ef304c6b11b3-1566937397911/node_modules/gdmn-db/packages/gdmn-internals"
+    gdmn-internals "file:C:/Users/Стас/AppData/Local/Yarn/Cache/v4/npm-gdmn-db-1.0.0-ee680a7e-0b43-41ab-90b1-0e4239ed3f2b-1566976990024/node_modules/gdmn-db/packages/gdmn-internals"
     generic-pool "^3"
     node-firebird-native-api "^1"
 
