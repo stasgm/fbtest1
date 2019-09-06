@@ -149,7 +149,7 @@ export abstract class AStatement {
         }
     }
 
-    public abstract async getPlan(): Promise<string>;
+    public abstract async getPlan(): Promise<string | undefined>;
 
     protected async _executeWithLock<R>(callback: TExecutor<void, R>): Promise<R> {
         await this._lock.acquire();

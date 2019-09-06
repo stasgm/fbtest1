@@ -9,6 +9,7 @@
     "start": "yarn server",
     "start:server-dev": "ts-node ./src/server.ts",
     "start:node": "node dist/server.js",
+    "test": "ts-node ./src/test.ts",
     "server": "tsc && node dist/server.js",
     "watch-node": "nodemon dist/server.js",
     "watch-ts": "tsc -w"

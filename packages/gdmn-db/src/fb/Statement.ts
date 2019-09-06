@@ -6,7 +6,7 @@ import { InputMetadata } from "./InputMetadata";
 import { Result } from "./Result";
 import { ResultSet } from "./ResultSet";
 import { Transaction } from "./Transaction";
-import { createDescriptors, dataWrite, fixMetadata, IDescriptor } from "./utils/fb-utils";
+import { createDescriptors, createInDescriptors, dataWrite, fixMetadata, IDescriptor } from "./utils/fb-utils";
 
 export interface IStatementSource {
     metadata: InputMetadata;
@@ -63,7 +63,7 @@ export class Statement extends AStatement {
             const inMetadata = fixMetadata(status, await handler!.getInputMetadataAsync(status))!;
             const outMetadata = fixMetadata(status, await handler!.getOutputMetadataAsync(status))!;
 
-            const inDescriptors = createDescriptors(status, inMetadata);
+            const inDescriptors = createInDescriptors(status, inMetadata, paramsAnalyzer.prepareParams());
             const outDescriptors = createDescriptors(status, outMetadata);
 
             const metadata = await InputMetadata.getMetadata({
@@ -83,9 +83,9 @@ export class Statement extends AStatement {
         return new Statement(transaction, paramsAnalyzer, source);
     }
 
-    public async getPlan(): Promise<string> {
+    public async getPlan(): Promise<string | undefined> {
         return this.transaction.connection.client.statusActionSync((status) =>
-        this.source!.handler.getPlanSync(status, false)) || "";
+        this.source!.handler.getPlanSync(status, false));
     }
 
     protected async _dispose(): Promise<void> {

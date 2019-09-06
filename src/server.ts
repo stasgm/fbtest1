@@ -64,7 +64,6 @@ const connect = async () => {
   const transaction: ATransaction = await con.startTransaction();
   const sqlPrepare = await con.prepare(transaction, `select name from gd_contact where name > '' and id = :id and name = :name and contacttype = :ct`);
 
-  // const sql = await con.executeQuery(transaction, `select first 1 name from gd_contact`);
   sqlPlan = await sqlPrepare.getPlan();
   console.log(sqlPlan);
 
