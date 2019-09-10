@@ -58,12 +58,12 @@ export class Statement extends AStatement {
                 0, paramsAnalyzer.sql, DIALECT_NUMBER, NativeStatement.PREPARE_PREFETCH_ALL);
 
             const rawInMetadata = await handler!.getInputMetadataAsync(status);
-            const rawInDescriptors = createDescriptors(status, rawInMetadata);
+            const rawInDescriptors = createInDescriptors(status, rawInMetadata, paramsAnalyzer.paramNameList);
 
             const inMetadata = fixMetadata(status, await handler!.getInputMetadataAsync(status))!;
             const outMetadata = fixMetadata(status, await handler!.getOutputMetadataAsync(status))!;
 
-            const inDescriptors = createInDescriptors(status, inMetadata, paramsAnalyzer.prepareParams());
+            const inDescriptors = createInDescriptors(status, inMetadata, paramsAnalyzer.paramNameList);
             const outDescriptors = createDescriptors(status, outMetadata);
 
             const metadata = await InputMetadata.getMetadata({
