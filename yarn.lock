@@ -905,9 +905,9 @@ gauge@~2.7.3:
 "gdmn-db@file:packages/gdmn-db":
   version "1.0.0"
   dependencies:
-    gdmn-internals "file:C:/Users/Стас/AppData/Local/Yarn/Cache/v4/npm-gdmn-db-1.0.0-350a7c11-dc88-4753-81e1-38ae60c3dd67-1568135811175/node_modules/gdmn-db/packages/gdmn-internals"
+    gdmn-internals "file:C:/Users/Стас/AppData/Local/Yarn/Cache/v4/npm-gdmn-db-1.0.0-37c9efcc-e714-489d-bbe8-adc8ebc55d44-1568829803179/node_modules/gdmn-db/packages/gdmn-internals"
     generic-pool "^3"
-    node-firebird-native-api "^1"
+    node-firebird-native-api "^1.0.1-beta.1"
 
 "gdmn-internals@file:packages/gdmn-db/packages/gdmn-internals":
   version "1.0.0"
@@ -1628,10 +1628,10 @@ node-addon-api@^1.7.1:
   resolved "https://registry.yarnpkg.com/node-addon-api/-/node-addon-api-1.7.1.tgz#cf813cd69bb8d9100f6bdca6755fc268f54ac492"
   integrity sha512-2+DuKodWvwRTrCfKOeR24KIc5unKjOh8mz17NCzVnHWfjAdDqbfbjqh7gUT+BkXBRQM52+xCHciKWonJ3CbJMQ==
 
-node-firebird-native-api@^1:
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/node-firebird-native-api/-/node-firebird-native-api-1.0.0.tgz#1aa7222e8b3f2afd31f1239e0c3895d05485f3ee"
-  integrity sha512-VwdtA1Ragd9dSjzXyFzItvEw0rgi2aIbEHPgv9t7YyHErXBMFx4idU4XTjZLoShBgkS+6gj10BANcMy3XeIAcg==
+node-firebird-native-api@^1.0.1-beta.1:
+  version "1.0.1-beta.1"
+  resolved "https://registry.yarnpkg.com/node-firebird-native-api/-/node-firebird-native-api-1.0.1-beta.1.tgz#5735c076bc37f31de2f10a0cb46a03c17bb6731d"
+  integrity sha512-TozHczai5CemKKV6UVErRcxtIFu56w1XT8Q0nPv5ljgtHeyyHw00y6vrLH0MJ1emLs+aU2pWaOaN4AaVTj7hjw==
   dependencies:
     "@types/node" "^12.6.9"
     bindings "^1.5.0"

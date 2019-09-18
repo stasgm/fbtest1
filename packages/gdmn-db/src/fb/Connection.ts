@@ -69,9 +69,8 @@ export class Connection extends AConnection {
             })
         ));
         } catch (error) {
-         await this.client.destroy(); 
+         await this.client.destroy();
          throw error;
-         ;
         }
     }
 
@@ -97,7 +96,7 @@ export class Connection extends AConnection {
                     const uri = Connection._optionsToUri(options);
                     return await this.client!.client!.dispatcher!.attachDatabaseAsync(status, uri, length, buffer);
                 })
-            )); 
+            ));
         } catch (error) {
             await this.client.destroy();
             throw error;
@@ -108,7 +107,7 @@ export class Connection extends AConnection {
         if (this.transactionsCount > 0) {
             throw new Error("Not all transactions finished");
         }
-        try { 
+        try {
             await this.client.statusAction((status) => this.handler!.detachAsync(status));
         } catch (error) {
             await this.client.destroy();
