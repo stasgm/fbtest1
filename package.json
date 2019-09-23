@@ -7,6 +7,7 @@
     "build-ts": "tsc",
     "debug": "nodemon --config nodemon-debug.json",
     "start": "yarn server",
+    "start2": "yarn test",
     "start:server-dev": "ts-node ./src/server.ts",
     "start:node": "node dist/server.js",
     "test": "ts-node ./src/test.ts",

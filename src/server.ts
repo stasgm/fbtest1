@@ -67,8 +67,8 @@ const connect = async () => {
   sqlPlan = await sqlPrepare.getPlan();
   console.log(sqlPlan);
 
-  for(let i = 0; i < sqlPrepare.metadata.columnCount; i += 1){
-    paramList.push(`параметр - ${sqlPrepare.metadata.getColumnType(i).toString()}`);
+  for(let i = 0; i < sqlPrepare.inMetadata.columnCount; i += 1){
+    paramList.push(`параметр - ${sqlPrepare.inMetadata.getColumnType(i).toString()}`);
   };
 
   // const params = sqlPrepare.metadata.descriptors?.map(i => i.type);

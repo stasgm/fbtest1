@@ -12,18 +12,25 @@ const connect = async () => {
   const con = driver.newConnection();
   await con.connect(dbOptions);
   const transaction: ATransaction = await con.startTransaction();
-  const sql = `select name from gd_contact where id = :id and contacttype = :contype`
+  const sql = `select * from gd_contact where id = :id and contacttype = :contype`
   const sqlPrepare = await con.prepare(transaction, sql);
 
   const sqlPlan = await sqlPrepare.getPlan();
   console.log(sqlPlan);
 
   const paramList = [];
-    for(let i = 0; i < sqlPrepare.metadata.columnCount; i += 1){
-    paramList.push(`параметр ${i + 1} - ${sqlPrepare.metadata.getColumnLabel(i)}`);
+  for(let i = 0; i < sqlPrepare.inMetadata.columnCount; i += 1){
+    paramList.push(`параметр ${i + 1} - ${sqlPrepare.inMetadata.getColumnLabel(i)}`);
   };
 
   console.log("Params:\n" + paramList.reduce((itm, acc) => (acc += `, ${itm}`)).split('\n'));
+
+  const fieldList = [];
+  for(let i = 0; i < sqlPrepare.outMetadata.columnCount; i += 1){
+    fieldList.push(`выходные даные ${i + 1} - ${sqlPrepare.outMetadata.getColumnLabel(i)}`);
+  };
+
+  console.log("Fields:\n" + fieldList.reduce((itm, acc) => (acc += `, ${itm}`)).split('\n'));
 
   await sqlPrepare.dispose();
 
