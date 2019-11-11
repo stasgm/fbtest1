@@ -4,7 +4,7 @@ const connect = async () => {
   const driver = Factory.FBDriver;
   const dbOptions: IConnectionOptions = {
     server: { host: 'localhost', port: 3050 },
-    path: 'test',
+    path: 'c:\\_Work\\Git\\golden\\_ng\\gdmn\\src\\gdmn-back\\databases\\work\\C6F9D480-045E-11EA-AA28-F183D4FF1BAB.FDB',
     username: 'SYSDBA',
     password: 'masterkey'
   };
@@ -12,7 +12,8 @@ const connect = async () => {
   const con = driver.newConnection();
   await con.connect(dbOptions);
   const transaction: ATransaction = await con.startTransaction();
-  const sql = `select * from gd_contact where id = :id and contacttype = :contype`
+  // const sql = `select * from gd_contact where id = :id and contacttype = :contype`
+  const sql = "select * from gd_document where documentdate = :adate"
   const sqlPrepare = await con.prepare(transaction, sql);
 
   const sqlPlan = await sqlPrepare.getPlan();
@@ -34,7 +35,7 @@ const connect = async () => {
 
   await sqlPrepare.dispose();
 
-  const params = {id: 147424690, contype: 4 };
+  const params = {adate: new Date(2017, 11, 10)};
   const resultSet = await con.executeQuery(transaction, sql, params);
 
   const contacts: string[] = [];
